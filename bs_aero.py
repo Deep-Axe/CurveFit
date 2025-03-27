@@ -20,21 +20,23 @@ uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
 if uploaded_file is not None:
     try:
-        df = pd.read_csv(uploaded_file)
         
+        df = pd.read_csv(uploaded_file)
+    
         st.subheader("Raw Data")
         st.dataframe(df.head())
-        
+    
         st.subheader("Column Selection")
         x_column = st.selectbox("Select X column", df.columns)
         y_column = st.selectbox("Select Y column", df.columns, index=min(1, len(df.columns)-1))
-        
+    
         x_data = df[x_column].values
         y_data = df[y_column].values
-        
+    
         degree = st.slider("Select polynomial degree", min_value=1, max_value=15, value=8)
         
         if st.button("Fit Curve"):
+
             coefficients = fit_curve(x_data, y_data, degree)
         
             x_fit = np.linspace(min(x_data), max(x_data), 100)
@@ -49,7 +51,7 @@ if uploaded_file is not None:
             ax.set_title('Curve Fitting')
         
             st.pyplot(fig)
-            
+        
             st.subheader("Fitted Polynomial Coefficients")
             coeffs_df = pd.DataFrame({
                 'Power': range(len(coefficients)),
@@ -61,16 +63,13 @@ if uploaded_file is not None:
                                  for i, coef in enumerate(coefficients)])
             st.subheader("Polynomial Equation")
             st.write(f"y = {equation}")
-        
-            desmos_url = f"https://www.desmos.com/calculator?lang=en&y={','.join(map(str, coefficients))}"
-            st.subheader("Desmos Graph")
-            st.write(f'<iframe src="{desmos_url}" width="100%" height="500"></iframe>', unsafe_allow_html=True)
             
     except Exception as e:
         st.error(f"Error processing file: {e}")
 else:
     st.info("Please upload a CSV file to get started")
 
+# Add instructions
 st.sidebar.header("Instructions")
 st.sidebar.write("""
 1. Upload a CSV file containing your data

@@ -61,6 +61,11 @@ if uploaded_file is not None:
                 'Coefficient': coeffs
             })
             st.dataframe(coeffs_df)
+            
+            # Display coefficients as list in increasing order of power
+            st.subheader("Polynomial Coefficients as List (lowest degree first)")
+            coeffs_increasing_order = coeffs[::-1]  # Reverse the order
+            st.write(list(coeffs_increasing_order))
 
             # Display polynomial equation (highest degree first)
             terms = []
